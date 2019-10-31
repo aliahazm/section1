@@ -1,0 +1,76 @@
+body{
+  font-family: arial;
+}
+
+input[type=text]{
+  padding: 8px 0;
+  padding-right: 100px;
+  padding-left: 8px;
+  margin: 3px 0;
+  border: 1.5px solid #ccc;
+  display: inline-block;
+  font-size: 10px;
+}
+
+input[type=submit]{
+  padding: 8px 98px;
+  margin: 3px 0;
+  border: 1.5px solid #ccc;
+  font-size: 10px;
+}
+
+input[type=checkbox]{
+  margin-right: 10px;
+}
+
+form{
+  font-size: 12px;
+}
+
+.img, .form{
+  float: left;
+}
+
+.form{
+  margin: 100px;
+  margin-left: 200px;
+}
+
+h2{
+  margin-bottom: 40px;
+}
+
+h4{
+  margin-bottom: 1px;
+  margin-left: 7px;
+}
+
+hr{
+  background-color: #20B2AA;
+  height: 1px;
+  width: 60px;
+  float: left;
+  margin-bottom: 10px;
+}
+
+.image{
+  float: right;
+}
+
+footer{
+  clear: both;
+}
+
+.img img{
+  margin-right: 0px;
+  clip-path: polygon(100% 50%, 0 0, 0 100%);
+  overflow: hidden;
+  height: auto;
+}
+
+.footer{
+  font-size: 10px;
+  clear: both;
+  float: right;
+  display: inline;
+}
