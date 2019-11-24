@@ -1,140 +1,90 @@
-const players = [{
-  name:"Player 1",
-  position: 0,
-  color: "gold"
-},{
-  name:"Player 2",
-  position: 0,
-  color: "white"
-}];
+var rollBtn = document.querySelector('#roll');
+var display = document.querySelector('#game');
+var playerTurn = 2;
+var playerPosition = [0, 0];
+var dice;
+var resetGame = 1;
+rollBtn.addEventListener('click', function(){rollDice()});
 
-let currentPlayerTurn = 0;
+function rollDice(){
 
-const width = 9;
-const height = 9;
-const board = [];
-let position = 0;
-let blackSquare = false;
-const ladders = [{
-  start: 15,
-  end: 5
-},{
-  start: 23,
-  end: 16
-},{
-  start: 8,
-  end: 15
-},{
-  start: 19,
-  end: 24
-}];
-
-for (var y = height; y >= 0; y--) {
-  let row = [];
-
-  board.push(row);
-  for (var x = 0; x < width; x++) {
-
-    row.push({x,y,occupied:null,position,color: blackSquare ? "steelblue" : "silver"});
-    blackSquare = !blackSquare;
-    position ++;
-  }
-}
-
-const boardSizeConst = 50;
-const renderBoard = ()=>{
-  let boardHTML = ``;
-  board.forEach(row=>{
-    row.forEach(square=>{
-      boardHTML += `<div class=square style="top:${square.y * boardSizeConst}px; left:${square.x * boardSizeConst}px; background-color:${square.color}"></div>`
-    });
-  });
-
-  players.forEach(player=>{
-    let square = null;
-    board.forEach(row=>{
-    row.forEach(square=>{
-          if (square.position === player.position) {
-            boardHTML += `<div class=player style="top:${square.y * boardSizeConst + 5}px; left:${square.x * boardSizeConst + 5}px;background-color:${player.color}"></div>`;
-          }
-      });
-    });
-  });
-
-  ladders.forEach(ladder=>{
-
-  //let start = 0;
-  let startPos = {x:0,y:0};
-  let endPos = {x:0,y:0};
-
-  board.forEach(row=>{
-    row.forEach(square=>{
-      if (square.position === ladder.start) {
-        startPos.x = square.x * boardSizeConst;
-        startPos.y = square.y * boardSizeConst;
-      }
-
-      if (square.position === ladder.end) {
-        endPos.x = square.x * boardSizeConst;
-        endPos.y = square.y * boardSizeConst;
-      }
-    });
-  });
-
-  const isLadder = ladder.end > ladder.start;
-
-  drawLine({color : isLadder ? "green" : "red",startPos,endPos});
-});
-document.getElementById("board").innerHTML = boardHTML;
-}
-
-
-function drawLine({color,startPos,endPos}){
-  var c=document.getElementById("canvas");
-  var ctx=c.getContext("2d");
-  ctx.beginPath();
-  const sizeRatio = 1;
-  ctx.moveTo(startPos.x + 25,startPos.y + 25);
-  ctx.lineTo(endPos.x + 25,endPos.y + 25 );
-
-  ctx.lineWidth = 15;
-  ctx.strokeStyle = color;
-  ctx.stroke();
-}
-
-renderBoard();
-
-
-
-var hasWon = false;
-window.rollDice = ()=>{
-  if (hasWon) {
-    return;
-  }
-  const max = 6;
-  const roll = Math.ceil(Math.random() * max);
-  console.log("You rolled", roll);
-  let currentPlayer = players[currentPlayerTurn];
-  currentPlayer.position += roll;
-  ladders.forEach(ladder=>{
-    if (ladder.start === currentPlayer.position) {
-      console.log("You stepped on a ladder!");
-      currentPlayer.position = ladder.end;
+    if (resetGame == 0) {
+      console.clear();
+      display.innerHTML = " ";
+      resetGame = 1;
+      playerTurn = 2;
     }
-  });
 
-  if (currentPlayer.position === position) {
-    console.log("Player has won!");
-    hasWon = true;
-  }
-  if (currentPlayer.position === position) {
-    const diff = currentPlayer.position - position;
-    currentPlayerPosition = position - diff;
-  }
+    if (playerTurn == 1) {
+      playerTurn = 2;
+      dice = Math.floor(Math.random() * 6) + 1
+      playerPosition[playerTurn-1] += dice;
+      console.log('Player 2 rolled ' + dice);
+      display.innerHTML += "Player 2 rolled " + dice + "<br/>";
 
-  currentPlayerTurn ++;
-  if (currentPlayerTurn >= players.length) {
-    currentPlayerTurn = 0;
-  }
-  renderBoard();
+      if (playerPosition[playerTurn-1] >= 25) {
+        console.log('Player 2 wins the game!');
+        display.innerHTML += "Player 2 wins the game!" + "<br/>";
+        playerPosition[0] = 0;
+        playerPosition[1] = 0;
+        resetGame = 0;
+      }
+
+      else {
+        console.log('Player 2 moved to position ' + playerPosition[playerTurn-1]);
+        display.innerHTML += "Player 2 moved to position " + playerPosition[playerTurn-1] + "<br/>";
+      }
+    }
+
+    else if (playerTurn == 2) {
+      playerTurn = 1;
+      dice = Math.floor(Math.random() * 6) + 1
+      playerPosition[playerTurn-1] += dice;
+      console.log('Player 1 rolled ' + dice);
+      display.innerHTML += "Player 1 rolled " + dice + "<br/>";
+
+      if (playerPosition[playerTurn-1] >= 25) {
+        console.log('Player 1 wins the game!');
+        display.innerHTML += "Player 1 wins the game! " + "<br/>";
+        playerPosition[0] = 0;
+        playerPosition[1] = 0;
+        resetGame = 0;
+      }
+
+      else {
+        console.log('Player 1 moved to position ' + playerPosition[playerTurn-1]);
+        display.innerHTML += "Player 1 moved to position " + playerPosition[playerTurn-1] + "<br/>";
+      }
+
+
+    }
+
+    else;
+
+    if (playerPosition[playerTurn-1] == 15) {
+      playerPosition[playerTurn-1] = 5;
+      console.log('Player ' + playerTurn + ' stepped on a snake! Go down to position 5.');
+      display.innerHTML += "Player " + playerTurn + " stepped on a snake! Go down to position 5." + "<br/>";
+    }
+
+    else if (playerPosition[playerTurn-1] == 23) {
+      playerPosition[playerTurn-1] = 16;
+      console.log('Player ' + playerTurn + ' stepped on a snake! Go down to position 16.');
+      display.innerHTML += "Player " + playerTurn + " stepped on a snake! Go down to position 16." + "<br/>";
+    }
+
+    else if (playerPosition[playerTurn-1] == 8) {
+      playerPosition[playerTurn-1] = 15;
+      console.log('Player ' + playerTurn + ' stepped on a ladder! Go up to position 15.');
+      display.innerHTML += "Player " + playerTurn + " stepped on a ladder! Go up to position 15." + "<br/>";
+    }
+
+    else if (playerPosition[playerTurn-1] == 19) {
+      playerPosition[playerTurn-1] = 24;
+      console.log('Player ' + playerTurn + ' stepped on a ladder! Go up to position 24.');
+      display.innerHTML += "Player " + playerTurn + " stepped on a ladder! Go up to position 24." + "<br/>";
+    }
+
+    else;
 }
+
